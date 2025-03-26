@@ -21,20 +21,35 @@ export async function updateMatchResult({ matchId, score1, score2 }: UpdateMatch
       throw new Error("Partida não encontrada");
     }
 
-    // 2. Calcular os pontos baseado no resultado
-    let points1 = 0;
-    let points2 = 0;
+    // 2. Calcular os pontos do resultado anterior (para subtrair)
+    let oldPoints1 = 0;
+    let oldPoints2 = 0;
 
-    if (score1 > score2) {
-      points1 = 3; // Vitória do jogador 1
-    } else if (score2 > score1) {
-      points2 = 3; // Vitória do jogador 2
-    } else {
-      points1 = 1; // Empate
-      points2 = 1;
+    if (match.score1 !== null && match.score2 !== null) {
+      if (match.score1 > match.score2) {
+        oldPoints1 = 3;
+      } else if (match.score2 > match.score1) {
+        oldPoints2 = 3;
+      } else {
+        oldPoints1 = 1;
+        oldPoints2 = 1;
+      }
     }
 
-    // 3. Atualizar a partida com o placar
+    // 3. Calcular os novos pontos
+    let newPoints1 = 0;
+    let newPoints2 = 0;
+
+    if (score1 > score2) {
+      newPoints1 = 3;
+    } else if (score2 > score1) {
+      newPoints2 = 3;
+    } else {
+      newPoints1 = 1;
+      newPoints2 = 1;
+    }
+
+    // 4. Atualizar a partida com o novo placar
     await tx.match.update({
       where: { id: matchId },
       data: {
@@ -43,34 +58,34 @@ export async function updateMatchResult({ matchId, score1, score2 }: UpdateMatch
       },
     });
 
-    // 4. Atualizar o jogador 1
+    // 5. Atualizar o jogador 1: subtrair pontos/gols antigos e adicionar novos
     await tx.player.update({
       where: { id: match.player1Id },
       data: {
         points: {
-          increment: points1
+          increment: newPoints1 - oldPoints1
         },
         goalsFor: {
-          increment: score1
+          increment: score1 - (match.score1 ?? 0)
         },
         goalsAgainst: {
-          increment: score2
+          increment: score2 - (match.score2 ?? 0)
         }
       },
     });
 
-    // 5. Atualizar o jogador 2
+    // 6. Atualizar o jogador 2: subtrair pontos/gols antigos e adicionar novos
     await tx.player.update({
       where: { id: match.player2Id },
       data: {
         points: {
-          increment: points2
+          increment: newPoints2 - oldPoints2
         },
         goalsFor: {
-          increment: score2
+          increment: score2 - (match.score2 ?? 0)
         },
         goalsAgainst: {
-          increment: score1
+          increment: score1 - (match.score1 ?? 0)
         }
       },
     });
