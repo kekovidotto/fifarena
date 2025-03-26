@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Player } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { PencilIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
+import EditPlayersButton from "../edit-players-button";
 
 export const Playerscolumns: ColumnDef<Player>[] = [
   {
@@ -17,12 +18,10 @@ export const Playerscolumns: ColumnDef<Player>[] = [
   {
     accessorKey: "actions",
     header: "Ações",
-    cell: () => {
+    cell: ({row: {original: player}}) => {
       return (
         <div className="space-x-1">
-          <Button variant="ghost" size="icon" className="text-muted-foreground">
-            <PencilIcon />
-          </Button>
+          <EditPlayersButton player={player}/>
           <Button variant="ghost" size="icon" className="text-muted-foreground">
             <TrashIcon />
           </Button>

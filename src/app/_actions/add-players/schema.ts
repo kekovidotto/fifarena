@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const addPlayersSchema = z.object({
+export const upsertPlayersSchema = z.object({
     name: z.string().min(1),
     team: z.string().min(1)
 })
