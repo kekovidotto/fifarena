@@ -1,84 +1,26 @@
-"use client";
 import React from "react";
+import { getPlayers } from "@/data/get-players";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { addPlayers } from "../_actions/add-players";
+import { ArrowDownUpIcon } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
+import { Playerscolumns } from "./_columns";
+import AddPlayersButton from "./add-players-button";
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Nome é obrigatório",
-  }),
-  team: z.string().min(1, {
-    message: "Time é obrigatório",
-  }),
-});
+interface PlayerPageProps {
+  params: Promise<{ name: string; team: string }>;
+}
 
-type FormSchema = z.infer<typeof formSchema>
-
-const PlayersPage = () => {
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      team: "",
-    },
-  });
-
-  const onSubmit = async (data: FormSchema) => {
-    try {
-      await addPlayers(data);
-      form.reset();
-      alert("Jogador cadastrado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao cadastrar jogador", error);
-    }
-  };
-
+const PlayersPage = async ({ params }: PlayerPageProps) => {
+  const { name, team } = await params;
+  const players = await getPlayers({ name, team });
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="mb-4 text-center text-4xl font-semibold">Cadastrar Jogadores</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
-                <FormControl>
-                  <Input placeholder="Digite um nome..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="team"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Clube</FormLabel>
-                <FormControl>
-                  <Input placeholder="Digite um clube..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Cadastrar</Button>
-        </form>
-      </Form>
+    <div className="space-y-6 p-6">
+      {/* TITULO E BOTAO DE CADASTRO */}
+      <div className="flex w-full items-center justify-between">
+        <h1 className="text-2xl font-bold">Lista de Jogadores Existentes</h1>
+        <AddPlayersButton />
+      </div>
+      <DataTable columns={Playerscolumns} data={players} />
     </div>
   );
 };
