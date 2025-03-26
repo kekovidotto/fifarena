@@ -21,7 +21,7 @@ export default async function GroupsPage() {
   });
 
   return (
-    <div className="container py-8">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Grupos</h1>
         <div className="flex gap-4 items-center">
