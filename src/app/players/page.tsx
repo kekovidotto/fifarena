@@ -22,7 +22,7 @@ const PlayersPage = async ({ params }: PlayerPageProps) => {
         <div className="flex gap-4 items-center">
           <Link
             href="/groups"
-            className="text-blue-600 hover:text-blue-800 underline"
+            className="text-white hover:text-primary/80 underline transition-colors"
           >
             Ver Grupos
           </Link>

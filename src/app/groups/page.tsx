@@ -25,9 +25,9 @@ export default async function GroupsPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Grupos</h1>
         <div className="flex gap-4 items-center">
-          <Link 
-            href="/matches" 
-            className="text-blue-600 hover:text-blue-800 underline"
+          <Link
+            href="/matches"
+            className="text-white hover:text-primary/80 underline transition-colors"
           >
             Ver Partidas
           </Link>

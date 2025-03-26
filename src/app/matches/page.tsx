@@ -25,9 +25,9 @@ export default async function MatchesPage() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Partidas dos Grupos</h1>
-        <Link 
-          href="/groups" 
-          className="text-blue-600 hover:text-blue-800 underline"
+        <Link
+          href="/groups"
+          className="text-white hover:text-primary/80 underline transition-colors"
         >
           Ver Classificação
         </Link>
