@@ -49,8 +49,8 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
   }
 
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-bold mb-4">Partidas - {groupName}</h3>
+    <Card className="card p-6">
+      <h3 className="section-title">Partidas - {groupName}</h3>
       <Table>
         <TableHeader>
           <TableRow>
@@ -64,8 +64,8 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
         <TableBody>
           {matches.map((match, index) => (
             <TableRow key={match.id}>
-              <TableCell>{index + 1}ª</TableCell>
-              <TableCell>{match.player1.name}</TableCell>
+              <TableCell className="font-bold text-primary">{index + 1}ª Rodada</TableCell>
+              <TableCell className="team-name">{match.player1.name}</TableCell>
               <TableCell>
                 {editingMatch === match.id ? (
                   <div className="flex items-center gap-2">
@@ -73,36 +73,39 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
                       type="number"
                       value={score1}
                       onChange={(e) => setScore1(e.target.value)}
-                      className="w-12 p-1 border rounded"
+                      className="w-12 p-1 border rounded bg-secondary/30 text-primary-foreground"
                       min="0"
                     />
-                    <span>x</span>
+                    <span className="score">x</span>
                     <input
                       type="number"
                       value={score2}
                       onChange={(e) => setScore2(e.target.value)}
-                      className="w-12 p-1 border rounded"
+                      className="w-12 p-1 border rounded bg-secondary/30 text-primary-foreground"
                       min="0"
                     />
                   </div>
                 ) : (
-                  match.score1 !== null && match.score2 !== null
-                    ? `${match.score1} x ${match.score2}`
-                    : "- x -"
+                  <span className="score">
+                    {match.score1 !== null && match.score2 !== null
+                      ? `${match.score1} x ${match.score2}`
+                      : "- x -"}
+                  </span>
                 )}
               </TableCell>
-              <TableCell>{match.player2.name}</TableCell>
+              <TableCell className="team-name">{match.player2.name}</TableCell>
               <TableCell>
                 {editingMatch === match.id ? (
                   <div className="flex gap-2">
-                    <Button 
+                    <Button
                       onClick={() => handleUpdateScore(match.id)}
                       disabled={isLoading}
+                      className="soccer-button"
                       size="sm"
                     >
                       Salvar
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => {
                         setEditingMatch(null);
                         setScore1("");
@@ -110,6 +113,7 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
                       }}
                       variant="outline"
                       size="sm"
+                      className="border-primary/50 text-primary hover:bg-primary/10"
                     >
                       Cancelar
                     </Button>
@@ -117,7 +121,7 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
                 ) : (
                   <Button
                     onClick={() => setEditingMatch(match.id)}
-                    variant="outline"
+                    className="soccer-button"
                     size="sm"
                   >
                     {match.score1 !== null ? "Editar" : "Definir"} Placar
