@@ -1,7 +1,70 @@
 import { db } from "@/lib/prisma";
-import { getPlayers } from "./get-players";
-import { generateMatchesForAllGroups } from "./generate-matches";
-import { Prisma } from "@prisma/client";
+import { Player } from "@prisma/client";
+
+type Match = {
+  player1Id: number;
+  player2Id: number;
+  phase: string;
+  groupId: number;
+};
+
+// Função para gerar as partidas de um grupo garantindo distribuição equilibrada de mandos
+function generateGroupMatches(players: Player[], groupId: number): Match[] {
+  // Lista de jogadores que ainda não foram player1Id
+  let playersNotPlayer1 = [...players];
+  const matches: Match[] = [];
+
+  // Gerar confrontos para o grupo
+  for (let i = 0; i < players.length; i++) {
+    for (let j = i + 1; j < players.length; j++) {
+      const player1 = players[i];
+      const player2 = players[j];
+
+      // Se a lista de jogadores que não foram player1 estiver vazia, recarregue-a
+      if (playersNotPlayer1.length === 0) {
+        playersNotPlayer1 = [...players];
+      }
+
+      // Determine quem será player1Id com base em quem ainda não jogou como player1
+      let match: Match;
+      if (playersNotPlayer1.find((p) => p.id === player1.id)) {
+        match = {
+          player1Id: player1.id,
+          player2Id: player2.id,
+          phase: "Grupos",
+          groupId: groupId,
+        };
+        // Remove o jogador da lista de não utilizados como player1
+        playersNotPlayer1 = playersNotPlayer1.filter(
+          (p) => p.id !== player1.id,
+        );
+      } else if (playersNotPlayer1.find((p) => p.id === player2.id)) {
+        match = {
+          player1Id: player2.id,
+          player2Id: player1.id,
+          phase: "Grupos",
+          groupId: groupId,
+        };
+        // Remove o jogador da lista de não utilizados como player1
+        playersNotPlayer1 = playersNotPlayer1.filter(
+          (p) => p.id !== player2.id,
+        );
+      } else {
+        // Se nenhum dos jogadores está na lista, use o primeiro jogador como player1
+        match = {
+          player1Id: player1.id,
+          player2Id: player2.id,
+          phase: "Grupos",
+          groupId: groupId,
+        };
+      }
+
+      matches.push(match);
+    }
+  }
+
+  return matches;
+}
 
 // Função para embaralhar array (algoritmo Fisher-Yates)
 function shuffleArray<T>(array: T[]): T[] {
@@ -13,9 +76,9 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 // Função para distribuir jogadores aleatoriamente em grupos
-function distributePlayersInGroups(players: any[], playersPerGroup: number) {
+function distributePlayersInGroups(players: Player[], playersPerGroup: number) {
   const shuffledPlayers = shuffleArray([...players]);
-  const groups: any[][] = [];
+  const groups: Player[][] = [];
   const numberOfGroups = Math.ceil(shuffledPlayers.length / playersPerGroup);
 
   // Criar arrays vazios para cada grupo
@@ -90,62 +153,21 @@ export async function generateGroups() {
           });
 
           if (groupWithPlayers && groupWithPlayers.players.length > 0) {
-            // Lista de jogadores que ainda não foram player1Id
-            let playersNotPlayer1 = [...groupWithPlayers.players];
-            const matches = [];
-
-            // Gerar confrontos para o grupo
-            for (let i = 0; i < groupWithPlayers.players.length; i++) {
-              for (let j = i + 1; j < groupWithPlayers.players.length; j++) {
-                const player1 = groupWithPlayers.players[i];
-                const player2 = groupWithPlayers.players[j];
-
-                // Se a lista de jogadores que não foram player1 estiver vazia, recarregue-a
-                if (playersNotPlayer1.length === 0) {
-                  playersNotPlayer1 = [...groupWithPlayers.players];
-                }
-
-                // Determine quem será player1Id com base em quem ainda não jogou como player1
-                let match;
-                if (playersNotPlayer1.find((p) => p.id === player1.id)) {
-                  match = {
-                    player1Id: player1.id,
-                    player2Id: player2.id,
-                    phase: "Grupos",
-                    groupId: group.id,
-                  };
-                  // Remove o jogador da lista de não utilizados como player1
-                  playersNotPlayer1 = playersNotPlayer1.filter(
-                    (p) => p.id !== player1.id,
-                  );
-                } else if (playersNotPlayer1.find((p) => p.id === player2.id)) {
-                  match = {
-                    player1Id: player2.id,
-                    player2Id: player1.id,
-                    phase: "Grupos",
-                    groupId: group.id,
-                  };
-                  // Remove o jogador da lista de não utilizados como player1
-                  playersNotPlayer1 = playersNotPlayer1.filter(
-                    (p) => p.id !== player2.id,
-                  );
-                } else {
-                  // Se nenhum dos jogadores está na lista, use o primeiro jogador como player1
-                  match = {
-                    player1Id: player1.id,
-                    player2Id: player2.id,
-                    phase: "Grupos",
-                    groupId: group.id,
-                  };
-                }
-
-                matches.push(match);
-              }
-            }
+            const matches = generateGroupMatches(
+              groupWithPlayers.players,
+              group.id,
+            );
 
             // Criar as partidas no banco
             await Promise.all(
-              matches.map((match) => tx.match.create({ data: match })),
+              matches.map((match) =>
+                tx.match.create({
+                  data: {
+                    ...match,
+                    createdAt: new Date(),
+                  },
+                }),
+              ),
             );
           }
         }
