@@ -45,4 +45,6 @@ model Match {
   phase     String  // "Grupos" ou "Eliminatórias"
   group     Group?  @relation(fields: [groupId], references: [id])
   groupId   Int?
+  createdAt DateTime @default(now())
+  roundNumber Int? // Número da rodada
 }
