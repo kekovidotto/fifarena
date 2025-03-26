@@ -1,6 +1,7 @@
 import { db } from "@/lib/prisma";
 import { GroupsDisplay } from "@/components/groups-display";
 import { GenerateGroupsButton } from "@/components/generate-groups-button";
+import { GenerateKnockoutButton } from "@/components/generate-knockout-button";
 import Link from "next/link";
 
 export default async function GroupsPage() {
@@ -31,7 +32,14 @@ export default async function GroupsPage() {
           >
             Ver Partidas
           </Link>
+          <Link
+            href="/knockout"
+            className="text-white hover:text-primary/80 underline transition-colors"
+          >
+            Fase Eliminatória
+          </Link>
           <GenerateGroupsButton hasExistingGroups={existingGroups.length > 0} />
+          {existingGroups.length > 0 && <GenerateKnockoutButton />}
         </div>
       </div>
 
