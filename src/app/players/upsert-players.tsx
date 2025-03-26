@@ -54,6 +54,7 @@ const UpsertPlayers = ({ isOpen, setIsOpen, defaultValues, playersId }: UpsertPl
     const onSubmit = async (data: FormSchema) => {
         try {
             await upsertPlayers({ ...data, id: playersId });
+            form.reset(); // Reseta o formulário após sucesso
             setIsOpen(false);
             alert("Jogador cadastrado com sucesso!");
         } catch (error) {

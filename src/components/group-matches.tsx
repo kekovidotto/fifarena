@@ -66,7 +66,7 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
             <TableRow key={match.id}>
               <TableCell>{index + 1}ª</TableCell>
               <TableCell>{match.player1.name}</TableCell>
-              <TableCell className="text-center">
+              <TableCell>
                 {editingMatch === match.id ? (
                   <div className="flex items-center gap-2">
                     <input

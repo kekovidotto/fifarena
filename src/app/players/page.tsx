@@ -5,6 +5,7 @@ import { ArrowDownUpIcon } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { Playerscolumns } from "./_columns";
 import AddPlayersButton from "./add-players-button";
+import Link from "next/link";
 
 interface PlayerPageProps {
   params: Promise<{ name: string; team: string }>;
@@ -18,7 +19,15 @@ const PlayersPage = async ({ params }: PlayerPageProps) => {
       {/* TITULO E BOTAO DE CADASTRO */}
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl font-bold">Lista de Jogadores Existentes</h1>
-        <AddPlayersButton />
+        <div className="flex gap-4 items-center">
+          <Link
+            href="/groups"
+            className="text-blue-600 hover:text-blue-800 underline"
+          >
+            Ver Grupos
+          </Link>
+          <AddPlayersButton />
+        </div>
       </div>
       <DataTable columns={Playerscolumns} data={players} />
     </div>
