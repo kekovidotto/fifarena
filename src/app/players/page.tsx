@@ -15,14 +15,14 @@ const PlayersPage = async ({ params }: PlayerPageProps) => {
   const { name, team } = await params;
   const players = await getPlayers({ name, team });
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
       {/* TITULO E BOTAO DE CADASTRO */}
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-2xl font-bold">Lista de Jogadores Existentes</h1>
-        <div className="flex gap-4 items-center">
+      <div className="flex flex-col sm:flex-row w-full items-start sm:items-center justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-bold">Lista de Jogadores Existentes</h1>
+        <div className="flex flex-wrap gap-3 items-center">
           <Link
             href="/groups"
-            className="text-white hover:text-primary/80 underline transition-colors"
+            className="text-white hover:text-primary/80 underline transition-colors text-sm sm:text-base"
           >
             Ver Grupos
           </Link>

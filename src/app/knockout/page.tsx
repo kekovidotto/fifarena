@@ -20,12 +20,12 @@ export default async function KnockoutPage() {
   });
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Fase Eliminatória</h1>
-        <div className="space-x-4">
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6 container-max-width">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:mb-8">
+        <h1 className="text-2xl sm:text-4xl font-bold">Fase Eliminatória</h1>
+        <div className="flex flex-wrap gap-3">
           <Link href="/groups">
-            <Button variant="outline">
+            <Button variant="outline" className="text-sm sm:text-base py-2 px-4">
               Voltar para Grupos
             </Button>
           </Link>
@@ -34,42 +34,46 @@ export default async function KnockoutPage() {
       </div>
 
       {matches.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center">
+        <Card className="card">
+          <CardHeader className="text-center p-4 sm:p-6">
+            <CardTitle className="text-xl sm:text-2xl">
               Fase eliminatória ainda não foi gerada
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-center text-muted-foreground">
+          <CardContent className="text-center text-muted-foreground text-sm sm:text-base p-4 sm:p-6">
             Clique no botão "Gerar Fase Eliminatória" para criar os confrontos do mata-mata com os dois primeiros colocados de cada grupo.
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
           {matches.map((match) => (
-            <Card key={match.id} className="overflow-hidden">
-              <CardHeader className="bg-primary/10">
-                <CardTitle className="text-center text-xl">
+            <Card key={match.id} className="card overflow-hidden">
+              <CardHeader className="bg-primary/10 p-3 sm:p-4">
+                <CardTitle className="text-center text-lg sm:text-xl">
                   Confronto Eliminatório
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-3 gap-4 items-center">
-                  <div className="text-right font-semibold">{match.player1.name}</div>
-                  <div className="text-center text-2xl font-bold">
+              <CardContent className="p-3 sm:p-6">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 items-center">
+                  <div className="text-right font-semibold text-sm sm:text-base">
+                    {match.player1.name}
+                  </div>
+                  <div className="text-center text-xl sm:text-2xl font-bold">
                     {match.score1 !== null && match.score2 !== null
                       ? `${match.score1} x ${match.score2}`
                       : "x"}
                   </div>
-                  <div className="text-left font-semibold">{match.player2.name}</div>
+                  <div className="text-left font-semibold text-sm sm:text-base">
+                    {match.player2.name}
+                  </div>
                   
-                  <div className="text-right text-sm text-muted-foreground">
+                  <div className="text-right text-xs sm:text-sm text-muted-foreground">
                     {match.player1.team}
                   </div>
-                  <div className="text-center text-sm text-muted-foreground">
+                  <div className="text-center text-xs sm:text-sm text-muted-foreground">
                     Mata-mata
                   </div>
-                  <div className="text-left text-sm text-muted-foreground">
+                  <div className="text-left text-xs sm:text-sm text-muted-foreground">
                     {match.player2.team}
                   </div>
                 </div>

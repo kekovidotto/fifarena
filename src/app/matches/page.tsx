@@ -22,23 +22,23 @@ export default async function MatchesPage() {
   });
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Partidas dos Grupos</h1>
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row w-full items-start sm:items-center justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-bold">Partidas dos Grupos</h1>
         <Link
           href="/groups"
-          className="text-white hover:text-primary/80 underline transition-colors"
+          className="text-white hover:text-primary/80 underline transition-colors text-sm sm:text-base"
         >
           Ver Classificação
         </Link>
       </div>
       
       {groups.length === 0 ? (
-        <div className="text-center py-8">
-          <p>Nenhuma partida encontrada. Gere os grupos primeiro.</p>
+        <div className="text-center py-6 sm:py-8 card">
+          <p className="text-sm sm:text-base">Nenhuma partida encontrada. Gere os grupos primeiro.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 gap-4 sm:gap-8">
           {groups.map((group) => (
             <GroupMatches 
               key={group.id} 

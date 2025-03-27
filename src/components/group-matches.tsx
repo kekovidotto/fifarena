@@ -49,58 +49,60 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
   }
 
   return (
-    <Card className="card p-6">
-      <h3 className="section-title">Partidas - {groupName}</h3>
+    <Card className="card p-3 sm:p-6">
+      <h3 className="section-title text-xl sm:text-3xl mb-4">Partidas - {groupName}</h3>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Rodada</TableHead>
+            <TableHead className="hidden sm:table-cell">Rodada</TableHead>
             <TableHead>Jogador 1</TableHead>
             <TableHead>Placar</TableHead>
             <TableHead>Jogador 2</TableHead>
-            <TableHead>Ações</TableHead>
+            <TableHead className="w-[100px] sm:w-auto">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {matches.map((match, index) => (
             <TableRow key={match.id}>
-              <TableCell className="font-bold text-primary">{index + 1}ª Rodada</TableCell>
-              <TableCell className="team-name">{match.player1.name}</TableCell>
+              <TableCell className="hidden sm:table-cell font-bold text-primary">{index + 1}ª Rodada</TableCell>
+              <TableCell className="team-name text-sm sm:text-base">{match.player1.name}</TableCell>
               <TableCell>
                 {editingMatch === match.id ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      value={score1}
-                      onChange={(e) => setScore1(e.target.value)}
-                      className="w-12 p-1 border rounded bg-secondary/30 text-primary-foreground"
-                      min="0"
-                    />
-                    <span className="score">x</span>
-                    <input
-                      type="number"
-                      value={score2}
-                      onChange={(e) => setScore2(e.target.value)}
-                      className="w-12 p-1 border rounded bg-secondary/30 text-primary-foreground"
-                      min="0"
-                    />
+                  <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <input
+                        type="number"
+                        value={score1}
+                        onChange={(e) => setScore1(e.target.value)}
+                        className="w-10 sm:w-12 p-1 border rounded bg-secondary/30 text-primary-foreground text-sm sm:text-base"
+                        min="0"
+                      />
+                      <span className="score text-base sm:text-2xl">x</span>
+                      <input
+                        type="number"
+                        value={score2}
+                        onChange={(e) => setScore2(e.target.value)}
+                        className="w-10 sm:w-12 p-1 border rounded bg-secondary/30 text-primary-foreground text-sm sm:text-base"
+                        min="0"
+                      />
+                    </div>
                   </div>
                 ) : (
-                  <span className="score">
+                  <span className="score text-base sm:text-2xl">
                     {match.score1 !== null && match.score2 !== null
                       ? `${match.score1} x ${match.score2}`
                       : "- x -"}
                   </span>
                 )}
               </TableCell>
-              <TableCell className="team-name">{match.player2.name}</TableCell>
+              <TableCell className="team-name text-sm sm:text-base">{match.player2.name}</TableCell>
               <TableCell>
                 {editingMatch === match.id ? (
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
                     <Button
                       onClick={() => handleUpdateScore(match.id)}
                       disabled={isLoading}
-                      className="soccer-button"
+                      className="soccer-button text-xs py-1 px-2"
                       size="sm"
                     >
                       Salvar
@@ -113,7 +115,7 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
                       }}
                       variant="outline"
                       size="sm"
-                      className="border-primary/50 text-primary hover:bg-primary/10"
+                      className="border-primary/50 text-primary hover:bg-primary/10 text-xs py-1 px-2"
                     >
                       Cancelar
                     </Button>
@@ -121,10 +123,10 @@ export function GroupMatches({ matches, groupName }: GroupMatchesProps) {
                 ) : (
                   <Button
                     onClick={() => setEditingMatch(match.id)}
-                    className="soccer-button"
+                    className="soccer-button text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-4 whitespace-nowrap"
                     size="sm"
                   >
-                    {match.score1 !== null ? "Editar" : "Definir"} Placar
+                    {match.score1 !== null ? "Editar" : "Definir"}
                   </Button>
                 )}
               </TableCell>

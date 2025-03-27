@@ -103,13 +103,15 @@ const UpsertPlayers = ({ isOpen, setIsOpen, defaultValues, playersId }: UpsertPl
                         </FormItem>
                     )}
                     />
-                    <DialogFooter>
-                    <DialogClose>
-                        <Button type="button" variant="outline">
+                    <DialogFooter className="flex gap-3 sm:gap-4">
+                    <DialogClose className="flex-1">
+                        <Button type="button" variant="outline" className="w-full">
                         Cancelar
                         </Button>
                     </DialogClose>
-                    <Button type="submit">{isUpdate ? 'Atualizar' : 'Cadastrar'}</Button>
+                    <Button type="submit" className="flex-1">
+                        {isUpdate ? 'Atualizar' : 'Cadastrar'}
+                    </Button>
                     </DialogFooter>
                 </form>
             </Form>

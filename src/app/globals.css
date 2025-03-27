@@ -72,33 +72,48 @@ body {
 
 @layer components {
   .card {
-    @apply bg-card shadow-lg hover:shadow-xl transition-shadow duration-300;
+    @apply bg-card shadow-lg hover:shadow-xl transition-shadow duration-300 p-3 sm:p-6;
     background: linear-gradient(145deg, hsl(143 31% 28%), hsl(143 31% 22%));
     border: 1px solid hsl(143 31% 30%);
   }
 
   .score {
-    @apply text-2xl font-bold text-primary;
+    @apply text-xl sm:text-2xl font-bold text-primary;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   .team-name {
-    @apply text-lg font-semibold text-primary-foreground;
+    @apply text-sm sm:text-lg font-semibold text-primary-foreground;
     letter-spacing: 0.5px;
   }
 
   .section-title {
-    @apply text-3xl font-bold mb-6 text-primary-foreground;
+    @apply text-xl sm:text-3xl font-bold mb-4 sm:mb-6 text-primary-foreground;
     letter-spacing: 1px;
     text-transform: uppercase;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .soccer-button {
-    @apply bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-lg 
-           transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg;
+    @apply bg-primary hover:bg-primary/90 text-white font-bold
+           py-2 px-4 sm:py-3 sm:px-6 rounded-lg text-sm sm:text-base
+           transform hover:scale-105 transition-all duration-200
+           shadow-md hover:shadow-lg;
     text-transform: uppercase;
     letter-spacing: 1px;
+  }
+
+  /* Container utilities */
+  .container-padding {
+    @apply p-3 sm:p-6;
+  }
+
+  .container-max-width {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .responsive-grid {
+    @apply grid grid-cols-1 gap-4 sm:gap-6;
   }
 
   table {

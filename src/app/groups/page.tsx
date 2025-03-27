@@ -22,24 +22,28 @@ export default async function GroupsPage() {
   });
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Grupos</h1>
-        <div className="flex gap-4 items-center">
-          <Link
-            href="/matches"
-            className="text-white hover:text-primary/80 underline transition-colors"
-          >
-            Ver Partidas
-          </Link>
-          <Link
-            href="/knockout"
-            className="text-white hover:text-primary/80 underline transition-colors"
-          >
-            Fase Eliminatória
-          </Link>
-          <GenerateGroupsButton hasExistingGroups={existingGroups.length > 0} />
-          {existingGroups.length > 0 && <GenerateKnockoutButton />}
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row w-full items-start sm:items-center justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-bold">Grupos</h1>
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/matches"
+              className="text-white hover:text-primary/80 underline transition-colors text-sm sm:text-base"
+            >
+              Ver Partidas
+            </Link>
+            <Link
+              href="/knockout"
+              className="text-white hover:text-primary/80 underline transition-colors text-sm sm:text-base"
+            >
+              Fase Eliminatória
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <GenerateGroupsButton hasExistingGroups={existingGroups.length > 0} />
+            {existingGroups.length > 0 && <GenerateKnockoutButton />}
+          </div>
         </div>
       </div>
 
