@@ -53,14 +53,14 @@ export function GroupsDisplay({ groups }: GroupsDisplayProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {groups.map((group) => (
-        <Card key={group.id} className="p-6">
+        <Card key={group.id} className="p-4 sm:p-6">
           <h3 className="text-lg font-bold mb-4">{group.name}</h3>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Pos</TableHead>
+                <TableHead className="text-center">Pos</TableHead>
                 <TableHead>Nome</TableHead>
                 <TableHead className="text-center">P</TableHead>
                 <TableHead className="text-center">J</TableHead>
@@ -75,11 +75,11 @@ export function GroupsDisplay({ groups }: GroupsDisplayProps) {
 
                 return (
                   <TableRow key={player.id}>
-                    <TableCell>{index + 1}º</TableCell>
+                    <TableCell className="text-center">{index + 1}º</TableCell>
                     <TableCell>
                       <div>
-                        <div>{player.name}</div>
-                        <div className="text-sm text-gray-500">{player.team}</div>
+                        <div className="font-medium">{player.name}</div>
+                        <div className="text-sm text-muted-foreground">{player.team}</div>
                       </div>
                     </TableCell>
                     <TableCell className="text-center font-bold">{player.points}</TableCell>

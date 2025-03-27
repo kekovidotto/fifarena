@@ -8,61 +8,70 @@ type Match = {
   groupId: number;
 };
 
-// Função para gerar as partidas de um grupo garantindo distribuição equilibrada de mandos
+// Função para gerar as partidas de um grupo garantindo que cada jogador seja player1 uma vez antes de repetir
 function generateGroupMatches(players: Player[], groupId: number): Match[] {
-  // Lista de jogadores que ainda não foram player1Id
-  let playersNotPlayer1 = [...players];
   const matches: Match[] = [];
-
-  // Gerar confrontos para o grupo
+  const totalMatches = (players.length * (players.length - 1)) / 2; // Número total de partidas
+  
+  // Lista de jogadores disponíveis para serem player1
+  let availableAsPlayer1 = [...players];
+  
+  // Lista de todas as combinações possíveis de jogadores
+  const allPairs: Array<[Player, Player]> = [];
   for (let i = 0; i < players.length; i++) {
     for (let j = i + 1; j < players.length; j++) {
-      const player1 = players[i];
-      const player2 = players[j];
-
-      // Se a lista de jogadores que não foram player1 estiver vazia, recarregue-a
-      if (playersNotPlayer1.length === 0) {
-        playersNotPlayer1 = [...players];
-      }
-
-      // Determine quem será player1Id com base em quem ainda não jogou como player1
-      let match: Match;
-      if (playersNotPlayer1.find((p) => p.id === player1.id)) {
-        match = {
-          player1Id: player1.id,
-          player2Id: player2.id,
-          phase: "Grupos",
-          groupId: groupId,
-        };
-        // Remove o jogador da lista de não utilizados como player1
-        playersNotPlayer1 = playersNotPlayer1.filter(
-          (p) => p.id !== player1.id,
-        );
-      } else if (playersNotPlayer1.find((p) => p.id === player2.id)) {
-        match = {
-          player1Id: player2.id,
-          player2Id: player1.id,
-          phase: "Grupos",
-          groupId: groupId,
-        };
-        // Remove o jogador da lista de não utilizados como player1
-        playersNotPlayer1 = playersNotPlayer1.filter(
-          (p) => p.id !== player2.id,
-        );
-      } else {
-        // Se nenhum dos jogadores está na lista, use o primeiro jogador como player1
-        match = {
-          player1Id: player1.id,
-          player2Id: player2.id,
-          phase: "Grupos",
-          groupId: groupId,
-        };
-      }
-
-      matches.push(match);
+      allPairs.push([players[i], players[j]]);
     }
   }
-
+  
+  // Embaralhar os pares para ordem aleatória
+  shuffleArray(allPairs);
+  
+  while (matches.length < totalMatches) {
+    // Se não há mais jogadores disponíveis para player1, recarregar a lista
+    if (availableAsPlayer1.length === 0) {
+      availableAsPlayer1 = [...players];
+    }
+    
+    // Procurar um par válido onde o player1 está disponível
+    for (const [player1, player2] of allPairs) {
+      // Verificar se este par já jogou
+      const pairExists = matches.some(
+        m =>
+          (m.player1Id === player1.id && m.player2Id === player2.id) ||
+          (m.player1Id === player2.id && m.player2Id === player1.id)
+      );
+      
+      if (!pairExists) {
+        // Verificar qual jogador do par pode ser player1
+        const player1Available = availableAsPlayer1.some(p => p.id === player1.id);
+        const player2Available = availableAsPlayer1.some(p => p.id === player2.id);
+        
+        if (player1Available) {
+          matches.push({
+            player1Id: player1.id,
+            player2Id: player2.id,
+            phase: "Grupos",
+            groupId: groupId,
+          });
+          // Remover o jogador da lista de disponíveis para player1
+          availableAsPlayer1 = availableAsPlayer1.filter(p => p.id !== player1.id);
+          break;
+        } else if (player2Available) {
+          matches.push({
+            player1Id: player2.id,
+            player2Id: player1.id,
+            phase: "Grupos",
+            groupId: groupId,
+          });
+          // Remover o jogador da lista de disponíveis para player1
+          availableAsPlayer1 = availableAsPlayer1.filter(p => p.id !== player2.id);
+          break;
+        }
+      }
+    }
+  }
+  
   return matches;
 }
 
@@ -153,19 +162,15 @@ export async function generateGroups() {
           });
 
         if (groupWithPlayers && groupWithPlayers.players.length > 0) {
-          // Gerar confrontos para o grupo
-          const matches = groupWithPlayers.players.flatMap((player1, i) =>
-            groupWithPlayers.players.slice(i + 1).map((player2) => ({
-              player1Id: player1.id,
-              player2Id: player2.id,
-              phase: "Grupos",
-              groupId: group.id,
-            }))
-          );
-
+          // Gerar confrontos para o grupo usando a função que garante distribuição equilibrada
+          const matches = generateGroupMatches(groupWithPlayers.players, group.id);
+          
+          // Embaralhar as partidas para ordem aleatória
+          const shuffledMatches = shuffleArray(matches);
+          
           // Criar as partidas no banco
           await Promise.all(
-            matches.map((match) => tx.match.create({ data: match }))
+            shuffledMatches.map((match) => tx.match.create({ data: match }))
           );
         }
       }
