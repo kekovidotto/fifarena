@@ -4,6 +4,8 @@ import { GenerateGroupsButton } from "@/components/generate-groups-button";
 import { GenerateKnockoutButton } from "@/components/generate-knockout-button";
 import Link from "next/link";
 
+export const revalidate = 0; // Desabilita o cache
+
 export default async function GroupsPage() {
   // Buscar grupos existentes com jogadores e suas partidas
   const existingGroups = await db.group.findMany({

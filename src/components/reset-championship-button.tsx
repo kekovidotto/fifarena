@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { resetChampionship } from "@/app/_actions/reset-championship";
 import { useState } from "react";
 import { RefreshCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function ResetChampionshipButton() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleReset = async () => {
     if (!confirm("Tem certeza que deseja resetar todo o campeonato? Essa ação não pode ser desfeita.")) {
@@ -18,8 +20,8 @@ export function ResetChampionshipButton() {
       const result = await resetChampionship();
       if (result.success) {
         alert("Campeonato resetado com sucesso!");
-        // Recarrega a página para atualizar os dados
-        window.location.reload();
+        router.refresh(); // Força revalidação dos dados
+        router.push('/'); // Volta para a página inicial
       } else {
         alert(result.error || "Erro ao resetar o campeonato");
       }
