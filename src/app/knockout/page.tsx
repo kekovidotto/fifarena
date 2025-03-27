@@ -1,4 +1,7 @@
 import { db } from "@/lib/prisma";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { GenerateKnockoutButton } from "@/components/generate-knockout-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";

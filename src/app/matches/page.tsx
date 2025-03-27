@@ -1,4 +1,7 @@
 import { db } from "@/lib/prisma";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { GroupMatches } from "@/components/group-matches";
 import Link from "next/link";
 
