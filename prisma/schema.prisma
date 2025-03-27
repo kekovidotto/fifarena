@@ -17,7 +17,7 @@ model Player {
   id      Int     @id @default(autoincrement())
   name    String
   team    String
-  group   Group?  @relation(fields: [groupId], references: [id])
+  group   Group?  @relation(fields: [groupId], references: [id], onDelete: SetNull)
   groupId Int?
 
   points      Int @default(0)  // Pontuação total na fase de grupos
@@ -36,14 +36,14 @@ model Group {
 
 model Match {
   id        Int     @id @default(autoincrement())
-  player1   Player  @relation("Player1", fields: [player1Id], references: [id])
+  player1   Player  @relation("Player1", fields: [player1Id], references: [id], onDelete: Cascade)
   player1Id Int
-  player2   Player  @relation("Player2", fields: [player2Id], references: [id])
+  player2   Player  @relation("Player2", fields: [player2Id], references: [id], onDelete: Cascade)
   player2Id Int
   score1    Int?    // Gols do player1
   score2    Int?    // Gols do player2
   phase     String  // "Grupos" ou "Eliminatórias"
-  group     Group?  @relation(fields: [groupId], references: [id])
+  group     Group?  @relation(fields: [groupId], references: [id], onDelete: SetNull)
   groupId   Int?
   createdAt DateTime @default(now())
   roundNumber Int? // Número da rodada
