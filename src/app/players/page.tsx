@@ -1,4 +1,7 @@
 import React from "react";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { getPlayers } from "@/data/get-players";
 import { Button } from "@/components/ui/button";
 import { ArrowDownUpIcon } from "lucide-react";
